@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "migration-lantern-scan"
+version = "0.1.0"
+description = "Offline OpenAI and Anthropic deprecation scanner for Python repositories"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+  { name = "AtomuKOYANAGI", email = "atom01090109@icloud.com" },
+]
+requires-python = ">=3.11"
+dependencies = [
+  "libcst>=1.4,<2",
+  "pydantic>=2.7,<3",
+  "typer>=0.12,<1",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Repository = "https://github.com/AtomuKOYANAGI/migration-lantern-scan"
+Issues = "https://github.com/AtomuKOYANAGI/migration-lantern-scan/issues/new/choose"
+Security = "https://github.com/AtomuKOYANAGI/migration-lantern-scan/security/advisories/new"
+Privacy = "https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/PRIVACY.md"
+Terms = "https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/TERMS.md"
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "mypy>=1.11,<2",
+  "pytest>=8.3,<9",
+  "ruff>=0.9,<1",
+]
+
+[project.scripts]
+migration-lantern-scan = "migration_lantern_scan.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+migration_lantern_scan = ["py.typed", "data/*.json"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true

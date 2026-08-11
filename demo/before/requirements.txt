@@ -1,0 +1,4 @@
+# Synthetic demo pins only. Do not install; Migration Lantern Scan never executes this repository.
+openai==0.28.1
+anthropic==0.18.1
+

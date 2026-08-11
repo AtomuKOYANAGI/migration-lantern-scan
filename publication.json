@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.1",
+  "status": "approved",
+  "brand": "Migration Lantern",
+  "action_name": "Migration Lantern Scan",
+  "distribution_name": "migration-lantern-scan",
+  "import_name": "migration_lantern_scan",
+  "cli_command": "migration-lantern-scan",
+  "action_ref": "main",
+  "publisher": "AtomuKOYANAGI",
+  "contact_email": "atom01090109@icloud.com",
+  "license_spdx": "Apache-2.0",
+  "copyright_notice": "Copyright 2026 4tomStudio",
+  "repository": "AtomuKOYANAGI/migration-lantern-scan",
+  "support_url": "https://github.com/AtomuKOYANAGI/migration-lantern-scan/issues/new/choose",
+  "security_url": "https://github.com/AtomuKOYANAGI/migration-lantern-scan/security/advisories/new",
+  "privacy_url": "https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/PRIVACY.md",
+  "terms_url": "https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/TERMS.md"
+}

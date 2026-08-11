@@ -1,0 +1,78 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: windows-latest
+            python: "3.11"
+          - os: macos-latest
+            python: "3.11"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: ubuntu-latest
+            python: "3.13"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest
+      - run: python -m ruff check .
+      - run: python -m ruff format --check .
+      - run: python -m mypy src tests
+      - run: python -m build
+
+  action-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+      - name: Install a different caller dependency version
+        run: python -m pip install --only-binary=:all: "pydantic==2.12.5"
+      - name: Record caller dependency version
+        shell: bash
+        run: echo "CALLER_PYDANTIC_VERSION=$(python -c 'import importlib.metadata; print(importlib.metadata.version("pydantic"))')" >> "$GITHUB_ENV"
+      - name: Run local Action against the synthetic demo
+        uses: ./
+        with:
+          path: demo/before
+          locale: en
+          fail-on-findings: "false"
+      - name: Confirm the Action did not replace caller dependencies
+        shell: bash
+        run: python -c 'import importlib.metadata, os; assert importlib.metadata.version("pydantic") == os.environ["CALLER_PYDANTIC_VERSION"]'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: migration-lantern-scan-demo-report-${{ matrix.os }}
+          path: migration-lantern-scan-reports
+          if-no-files-found: error

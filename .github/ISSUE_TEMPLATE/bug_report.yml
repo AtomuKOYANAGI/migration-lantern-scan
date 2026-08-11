@@ -1,0 +1,65 @@
+name: Bug report / 不具合報告
+description: Report a reproducible scanner defect using synthetic or public code only.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do **not** include API keys, credentials, private source, customer data, or private repository links. Reduce the issue to synthetic or already-public code. For a suspected vulnerability, do not open a public issue; use the private Security Advisory link in the issue chooser.
+
+        APIキー、認証情報、非公開コード、顧客データ、private repositoryのURLは記載しないでください。合成コードまたは既に公開済みのコードだけで再現してください。脆弱性の疑いは公開Issueではなく、Issue選択画面の非公開Security Advisoryを使用してください。
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Safe disclosure / 安全な情報開示
+      options:
+        - label: I removed secrets, private source, customer data, and private repository links.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: Migration Lantern Scan version
+      placeholder: v0.1.0 or commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: execution
+    attributes:
+      label: Execution environment
+      options:
+        - GitHub Action
+        - Local CLI
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic or public reproduction
+      description: Include the smallest non-sensitive example and exact command or workflow input.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Redact local paths or report fields that disclose private repository structure.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Python and operating system
+      placeholder: Python 3.11, Ubuntu 24.04
+    validations:
+      required: true

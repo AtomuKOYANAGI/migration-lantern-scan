@@ -1,0 +1,29 @@
+name: Migration Lantern Scan
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      # For production, replace main with a reviewed full commit SHA.
+      - uses: AtomuKOYANAGI/migration-lantern-scan@main
+        with:
+          path: .
+          locale: en
+          fail-on-findings: "true"
+          fail-on-issues: "true"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        if: always()
+        with:
+          name: migration-lantern-scan-reports
+          path: migration-lantern-scan-reports
+          retention-days: 7

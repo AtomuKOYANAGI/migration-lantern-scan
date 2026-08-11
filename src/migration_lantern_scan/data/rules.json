@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "verified_on": "2026-08-10",
+  "rules": [
+    {
+      "rule_id": "openai-gpt-5-2-chat-latest-retirement",
+      "provider": "openai",
+      "category": "model",
+      "title_en": "OpenAI GPT-5.2 Chat snapshot retirement",
+      "title_ja": "OpenAI GPT-5.2 Chatスナップショット廃止",
+      "deprecated_target": "gpt-5.2-chat-latest",
+      "recommended_target": "gpt-5.6-sol",
+      "announced_on": "2026-05-08",
+      "deadline": "2026-08-10",
+      "severity": "critical",
+      "evidence": [
+        {
+          "title": "OpenAI API deprecations",
+          "url": "https://developers.openai.com/api/docs/deprecations",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "GPT-5.2 Chat model",
+          "url": "https://developers.openai.com/api/docs/models/gpt-5.2-chat-latest",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "GPT-5.6 Sol model",
+          "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "OpenAI GPT-5.6 model guidance",
+          "url": "https://developers.openai.com/api/docs/guides/latest-model?model=gpt-5.6",
+          "checked_on": "2026-08-10"
+        }
+      ],
+      "match_kind": "model_argument",
+      "call_paths": ["responses.create", "chat.completions.create"],
+      "call_match": "suffix",
+      "receiver_names": ["openai", "openai_client", "_openai_client"],
+      "keyword": "model",
+      "deprecated_values": ["gpt-5.2-chat-latest"]
+    },
+    {
+      "rule_id": "anthropic-claude-opus-4-1-retirement",
+      "provider": "anthropic",
+      "category": "model",
+      "title_en": "Anthropic Claude Opus 4.1 retirement",
+      "title_ja": "Anthropic Claude Opus 4.1廃止",
+      "deprecated_target": "claude-opus-4-1-20250805",
+      "recommended_target": "claude-opus-5",
+      "replacement_at_announcement": "claude-opus-4-8",
+      "migration_note_en": "The retirement announcement named Claude Opus 4.8; the current official migration guide maps Claude Opus 4.1 to Claude Opus 5. Re-test thinking behavior, tokenization, refusals, cost, and latency.",
+      "migration_note_ja": "廃止公告時の移行先はClaude Opus 4.8でしたが、現行の公式移行ガイドはClaude Opus 4.1からClaude Opus 5への移行を案内しています。thinking挙動、トークン化、拒否、費用、速度を再評価してください。",
+      "announced_on": "2026-06-05",
+      "deadline": "2026-08-05",
+      "severity": "critical",
+      "evidence": [
+        {
+          "title": "Anthropic model deprecations",
+          "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "Anthropic model migration guide",
+          "url": "https://platform.claude.com/docs/en/about-claude/models/migration-guide",
+          "checked_on": "2026-08-10"
+        }
+      ],
+      "match_kind": "model_argument",
+      "call_paths": ["messages.create", "messages.stream", "beta.messages.create"],
+      "call_match": "suffix",
+      "receiver_names": ["anthropic", "anthropic_client", "_anthropic_client"],
+      "keyword": "model",
+      "deprecated_values": ["claude-opus-4-1-20250805", "claude-opus-4-1"]
+    },
+    {
+      "rule_id": "openai-python-v1-legacy-chatcompletion",
+      "provider": "openai",
+      "category": "sdk_syntax",
+      "title_en": "Legacy OpenAI Python ChatCompletion syntax",
+      "title_ja": "OpenAI Python旧ChatCompletion記法",
+      "deprecated_target": "openai.ChatCompletion.create",
+      "recommended_target": "OpenAI().chat.completions.create",
+      "announced_on": "2023-11-08",
+      "deadline": null,
+      "severity": "high",
+      "evidence": [
+        {
+          "title": "Official openai-python v1 migration guide",
+          "url": "https://github.com/openai/openai-python/discussions/742",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "Official openai-python repository",
+          "url": "https://github.com/openai/openai-python",
+          "checked_on": "2026-08-10"
+        }
+      ],
+      "match_kind": "qualified_call",
+      "call_paths": ["openai.ChatCompletion.create"],
+      "call_match": "exact",
+      "receiver_names": [],
+      "keyword": null,
+      "deprecated_values": []
+    },
+    {
+      "rule_id": "anthropic-legacy-text-completions-endpoint",
+      "provider": "anthropic",
+      "category": "endpoint",
+      "title_en": "Legacy Anthropic Text Completions endpoint",
+      "title_ja": "Anthropic旧Text Completionsエンドポイント",
+      "deprecated_target": "completions.create (/v1/complete)",
+      "recommended_target": "messages.create (/v1/messages)",
+      "announced_on": null,
+      "deadline": null,
+      "severity": "high",
+      "evidence": [
+        {
+          "title": "Anthropic legacy Text Completions API reference",
+          "url": "https://platform.claude.com/docs/en/api/python/completions/create",
+          "checked_on": "2026-08-10"
+        },
+        {
+          "title": "Anthropic Python SDK",
+          "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python",
+          "checked_on": "2026-08-10"
+        }
+      ],
+      "match_kind": "qualified_call",
+      "call_paths": ["completions.create"],
+      "call_match": "suffix",
+      "receiver_names": ["anthropic", "anthropic_client", "_anthropic_client"],
+      "keyword": null,
+      "deprecated_values": []
+    }
+  ]
+}

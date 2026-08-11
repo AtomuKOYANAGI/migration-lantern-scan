@@ -1,0 +1,89 @@
+name: Migration Lantern Scan
+description: Scan Python code for documented OpenAI and Anthropic deprecations without executing it.
+author: AtomuKOYANAGI
+branding:
+  icon: shield
+  color: green
+
+inputs:
+  path:
+    description: Repository path to scan.
+    required: false
+    default: .
+  locale:
+    description: Report language (en or ja).
+    required: false
+    default: en
+  output-dir:
+    description: Directory for migration-lantern-scan.json and migration-lantern-scan.md.
+    required: false
+    default: migration-lantern-scan-reports
+  fail-on-findings:
+    description: Return exit code 3 when findings exist.
+    required: false
+    default: "true"
+  fail-on-issues:
+    description: Return exit code 4 for review issues; incomplete scans always return 2.
+    required: false
+    default: "true"
+
+outputs:
+  json-report:
+    description: Path to the JSON report.
+    value: ${{ steps.scan.outputs.json-report }}
+  markdown-report:
+    description: Path to the Markdown report.
+    value: ${{ steps.scan.outputs.markdown-report }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      with:
+        python-version: "3.11"
+    - name: Install hash-locked scanner dependencies in an isolated target
+      id: dependencies
+      shell: bash
+      env:
+        PYTHONNOUSERSITE: "1"
+        PYTHONPATH: ""
+      run: |
+        dependency_root="$(python -P -c 'import sys, tempfile; print(tempfile.mkdtemp(prefix="migration-lantern-scan-", dir=sys.argv[1]))' "$RUNNER_TEMP")"
+        echo "dependency-root=$dependency_root" >> "$GITHUB_OUTPUT"
+        python -P -m pip install --disable-pip-version-check --only-binary=:all: \
+          --require-hashes --ignore-installed --target "$dependency_root" \
+          -r "${{ github.action_path }}/requirements-action.lock"
+    - name: Scan source without executing it
+      id: scan
+      shell: bash
+      env:
+        MIGRATION_LANTERN_INPUT_PATH: ${{ inputs.path }}
+        MIGRATION_LANTERN_LOCALE: ${{ inputs.locale }}
+        MIGRATION_LANTERN_OUTPUT_DIR: ${{ inputs.output-dir }}
+        MIGRATION_LANTERN_FAIL: ${{ inputs.fail-on-findings }}
+        MIGRATION_LANTERN_FAIL_ISSUES: ${{ inputs.fail-on-issues }}
+        MIGRATION_LANTERN_MODULE_ROOT: ${{ github.action_path }}/src
+        MIGRATION_LANTERN_DEPENDENCY_ROOT: ${{ steps.dependencies.outputs.dependency-root }}
+        PYTHONNOUSERSITE: "1"
+        PYTHONPATH: ""
+      run: |
+        case "$MIGRATION_LANTERN_LOCALE" in en|ja) ;; *) echo "locale must be en or ja" >&2; exit 2;; esac
+        case "$MIGRATION_LANTERN_FAIL" in true|false) ;; *) echo "fail-on-findings must be true or false" >&2; exit 2;; esac
+        case "$MIGRATION_LANTERN_FAIL_ISSUES" in true|false) ;; *) echo "fail-on-issues must be true or false" >&2; exit 2;; esac
+        if [[ -z "$MIGRATION_LANTERN_OUTPUT_DIR" || "$MIGRATION_LANTERN_OUTPUT_DIR" == *$'\n'* || "$MIGRATION_LANTERN_OUTPUT_DIR" == *$'\r'* ]]; then
+          echo "output-dir must be non-empty and single-line" >&2
+          exit 2
+        fi
+        MIGRATION_LANTERN_PATH_SEPARATOR="$(python -P -c 'import os; print(os.pathsep)')"
+        export PYTHONPATH="${MIGRATION_LANTERN_MODULE_ROOT}${MIGRATION_LANTERN_PATH_SEPARATOR}${MIGRATION_LANTERN_DEPENDENCY_ROOT}"
+        python -P -c 'import os; from pathlib import Path; from migration_lantern_scan.reporting import require_safe_output_directory; require_safe_output_directory(Path(os.environ["MIGRATION_LANTERN_OUTPUT_DIR"]))'
+        echo "json-report=${MIGRATION_LANTERN_OUTPUT_DIR}/migration-lantern-scan.json" >> "$GITHUB_OUTPUT"
+        echo "markdown-report=${MIGRATION_LANTERN_OUTPUT_DIR}/migration-lantern-scan.md" >> "$GITHUB_OUTPUT"
+        args=()
+        if [[ "$MIGRATION_LANTERN_FAIL" == "true" ]]; then args+=(--fail-on-findings); fi
+        if [[ "$MIGRATION_LANTERN_FAIL_ISSUES" == "true" ]]; then args+=(--fail-on-issues); fi
+        python -P -m migration_lantern_scan scan "$MIGRATION_LANTERN_INPUT_PATH" \
+          --locale "$MIGRATION_LANTERN_LOCALE" \
+          --output-dir "$MIGRATION_LANTERN_OUTPUT_DIR" \
+          "${args[@]}"
