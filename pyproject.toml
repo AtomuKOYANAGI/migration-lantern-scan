@@ -34,7 +34,7 @@ Terms = "https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/TERMS
 [project.optional-dependencies]
 dev = [
   "build>=1.2,<2",
-  "mypy>=1.11,<2",
+  "mypy>=1.11,<3",
   "pytest>=8.3,<9",
   "ruff>=0.9,<1",
 ]
