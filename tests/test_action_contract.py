@@ -128,6 +128,10 @@ def test_ci_covers_supported_python_and_runs_the_action_on_three_platforms() -> 
     assert '"pydantic==2.12.5"' in workflow
     assert "CALLER_PYDANTIC_VERSION" in workflow
     assert 'importlib.metadata.version("pydantic") ==' in workflow
+    assert "run: python -m pip install --only-binary=:all:" not in workflow
+    assert (
+        'run: |\n          python -m pip install --only-binary=:all: "pydantic==2.12.5"' in workflow
+    )
 
 
 def test_isolated_dependency_target_does_not_replace_caller_package(tmp_path: Path) -> None:

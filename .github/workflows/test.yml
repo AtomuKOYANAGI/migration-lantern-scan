@@ -58,10 +58,13 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install a different caller dependency version
-        run: python -m pip install --only-binary=:all: "pydantic==2.12.5"
+        run: |
+          python -m pip install --only-binary=:all: "pydantic==2.12.5"
       - name: Record caller dependency version
         shell: bash
-        run: echo "CALLER_PYDANTIC_VERSION=$(python -c 'import importlib.metadata; print(importlib.metadata.version("pydantic"))')" >> "$GITHUB_ENV"
+        run: |
+          caller_pydantic="$(python -c 'import importlib.metadata; print(importlib.metadata.version("pydantic"))')"
+          echo "CALLER_PYDANTIC_VERSION=$caller_pydantic" >> "$GITHUB_ENV"
       - name: Run local Action against the synthetic demo
         uses: ./
         with:
@@ -70,7 +73,8 @@ jobs:
           fail-on-findings: "false"
       - name: Confirm the Action did not replace caller dependencies
         shell: bash
-        run: python -c 'import importlib.metadata, os; assert importlib.metadata.version("pydantic") == os.environ["CALLER_PYDANTIC_VERSION"]'
+        run: |
+          python -c 'import importlib.metadata, os; assert importlib.metadata.version("pydantic") == os.environ["CALLER_PYDANTIC_VERSION"]'
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: migration-lantern-scan-demo-report-${{ matrix.os }}
