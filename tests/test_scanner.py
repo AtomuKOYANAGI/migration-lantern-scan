@@ -541,7 +541,8 @@ def test_symlinked_source_directory_is_an_incomplete_scan(tmp_path: Path) -> Non
 @pytest.mark.skipif(not hasattr(os, "mkfifo"), reason="FIFO creation requires POSIX support")
 def test_non_regular_python_path_is_rejected_without_reading(tmp_path: Path) -> None:
     fifo = tmp_path / "blocked.py"
-    os.mkfifo(fifo)  # type: ignore[attr-defined]
+    mkfifo: Callable[[Path], None] = vars(os)["mkfifo"]
+    mkfifo(fifo)
 
     report = scan_repository(tmp_path, load_registry())
 
