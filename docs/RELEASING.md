@@ -1,8 +1,9 @@
 # Repository publication and release procedure
 
-The initial authorization covers the public GitHub repository only. It does not authorize a
-version tag, GitHub Release, Marketplace listing, package-index upload, website deployment, or
-paid-service transaction.
+The initial authorization covered the public GitHub repository. The follow-up authorization covers
+the reviewed `v0.1.0` tag, its GitHub Release, and the free GitHub Marketplace Action listing. It
+does not authorize a movable `v0` tag, package-index upload, website deployment, payment setup,
+sales listing, outreach, or paid-service transaction.
 
 ## Public repository publication
 
@@ -24,9 +25,20 @@ paid-service transaction.
 9. Verify the rendered README and policy links, inspect the remote file tree, and record the commit
    SHA, rule digest, dependency-lock digest, manifest digest, publication time, and operator.
 
-## Separately approved future releases
+## Approved `v0.1.0` Marketplace release
 
-A versioned Action release may add a reviewed `v0.1.0` tag and a movable `v0` major tag. Publishing
-those tags, creating a GitHub Release, listing the Action in GitHub Marketplace, or publishing the
-Python package requires a separate approval and a fresh full-tree audit. Until then, examples use
-`@main` and tell production users to pin a reviewed full commit SHA.
+1. Repeat the complete public-tree audit, tests, cross-platform Action smoke tests, and manifest
+   review against the exact release candidate.
+2. Tag only the reviewed release commit as `v0.1.0`; do not create or move a `v0` tag under this
+   authorization.
+3. Publish a GitHub Release titled `Migration Lantern Scan v0.1.0` with the free-Scan boundary,
+   supported platforms, report formats, security properties, and known static-analysis limits.
+4. Select **Publish this Action to the GitHub Marketplace**, primary category **Code quality**, and
+   secondary category **Dependency management**. Accepting GitHub's Marketplace terms and any 2FA
+   challenge is an owner-only account action.
+5. Verify the live Marketplace page, `@v0.1.0` workflow coordinate, release/tag commit, policy
+   links, and a clean synthetic Action run. Record the release URL, commit, manifest digest, and
+   publication time in the private launch log.
+
+Future releases, a movable major tag, PyPI, a website, payment, listings, and outreach require a
+new scoped approval.

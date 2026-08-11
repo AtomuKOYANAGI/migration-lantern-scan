@@ -48,9 +48,9 @@ migration-lantern-scan help-ja
 
 ## GitHub Action
 
-このリポジトリは `main` から直接利用できます。今回の初期公開にはversion tagとGitHub
-Marketplace掲載を含みません。本番利用では、内容を確認したcommit SHAへ `main` を置き換えて
-固定してください。
+`v0.1.0` は、最初のversion付きGitHub Actionリリースです。安定した公開版としてこのtagに
+固定するか、サプライチェーンをより厳格に管理する場合は、内容を確認した完全なcommit SHAに
+固定してください。`main` は開発先端であり、本番利用の推奨参照先ではありません。
 
 ```yaml
 name: Migration Lantern Scan
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: AtomuKOYANAGI/migration-lantern-scan@main
+      - uses: AtomuKOYANAGI/migration-lantern-scan@v0.1.0
         with:
           path: .
           locale: ja
@@ -128,5 +128,6 @@ bindingの信頼度であり、移行後の挙動が安全であることの証�
 - 利用条件: [Terms of Use / 利用条件](https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/TERMS.md)
 
 Apache-2.0の対象は、この公開Scanリポジトリで配布するファイルだけです。非公開のMigration
-Pilot実装や顧客用作業領域には適用しません。パッケージ配布、version tag、GitHub Marketplace
-掲載、Webサイト、決済、有料サービスの公開には、別途の公開判断が必要です。
+Pilot実装や顧客用作業領域には適用しません。`v0.1.0` GitHub ActionリリースとMarketplace掲載
+で配布するのも、この無料Scanだけです。パッケージ配布、Webサイト、決済、有料サービスの
+公開には、別途の判断が必要です。

@@ -49,9 +49,9 @@ migration-lantern-scan help-ja
 
 ## GitHub Action
 
-The repository can be used directly from `main`. No version tag or GitHub Marketplace listing is
-part of this initial repository publication. For production, replace `main` with a full commit SHA
-that you have reviewed.
+`v0.1.0` is the first versioned GitHub Action release. Pin that tag for a stable public version, or
+use a reviewed full commit SHA for the strongest supply-chain assurance. `main` is the development
+tip and is not the recommended production reference.
 
 ```yaml
 name: Migration Lantern Scan
@@ -65,7 +65,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: AtomuKOYANAGI/migration-lantern-scan@main
+      - uses: AtomuKOYANAGI/migration-lantern-scan@v0.1.0
         with:
           path: .
           locale: en
@@ -141,6 +141,6 @@ python -m build
 - Terms: [Terms of Use](https://github.com/AtomuKOYANAGI/migration-lantern-scan/blob/main/TERMS.md)
 
 Apache-2.0 applies only to the files distributed in this public Scan repository. It does not apply
-to the private Migration Pilot implementation or customer workspaces. A package-index release,
-version tag, GitHub Marketplace listing, hosted website, payment flow, or paid service publication
-requires a separate release decision.
+to the private Migration Pilot implementation or customer workspaces. The `v0.1.0` GitHub Action
+release and Marketplace listing distribute only this free Scan. A package-index release, hosted
+website, payment flow, or paid-service publication requires a separate decision.

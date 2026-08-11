@@ -6,7 +6,7 @@
   "distribution_name": "migration-lantern-scan",
   "import_name": "migration_lantern_scan",
   "cli_command": "migration-lantern-scan",
-  "action_ref": "main",
+  "action_ref": "v0.1.0",
   "publisher": "AtomuKOYANAGI",
   "contact_email": "atom01090109@icloud.com",
   "license_spdx": "Apache-2.0",

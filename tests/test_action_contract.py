@@ -71,6 +71,23 @@ def test_public_gitignore_excludes_local_secrets_and_generated_outputs() -> None
     assert "!.env.example" not in patterns
 
 
+def test_release_coordinates_use_the_reviewed_version_tag() -> None:
+    metadata = json.loads((ROOT / "publication.json").read_text(encoding="utf-8"))
+    coordinate = "AtomuKOYANAGI/migration-lantern-scan@v0.1.0"
+
+    assert metadata["action_ref"] == "v0.1.0"
+    for path in (
+        ROOT / "README.md",
+        ROOT / "README.ja.md",
+        ROOT / "examples" / "migration-lantern-scan.yml",
+        ROOT / "docs" / "MARKETPLACE.md",
+    ):
+        text = path.read_text(encoding="utf-8")
+        assert coordinate in text
+        assert "AtomuKOYANAGI/migration-lantern-scan@main" not in text
+        assert "replace main" not in text.lower()
+
+
 def test_action_is_static_read_only_and_secret_free() -> None:
     action = (ROOT / "action.yml").read_text(encoding="utf-8")
     workflow = (ROOT / "examples" / "migration-lantern-scan.yml").read_text(encoding="utf-8")
